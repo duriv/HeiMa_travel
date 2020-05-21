@@ -9,6 +9,123 @@
     <link rel="stylesheet" type="text/css" href="css/common.css">
     <link rel="stylesheet" href="css/search.css">
     <script src="js/jquery-3.3.1.js"></script>
+    <script>
+            $(function () {
+                var serch = location.search;
+                //切割字符串，拿到第二个值
+                var cid = serch.split("=")[1];
+                // alert(cid);
+                //当页面加载完毕后，调用load方法，发送ajax请求
+                load(cid);
+            });
+            function load(cid,currentPage) {
+                //发送ajax，请求route/pageQuery,传递cid
+                $.get("route/pageQuery",{cid:cid,currentPage:currentPage},function (pb) {
+                    //解析pagebean数据展示到页面上
+                    //1.分页工具条数据展示
+                    //1.1展示总页码和总记录数
+                    $("#totalPage").html(pb.totalPage);
+                    $("#totalCount").html(pb.totalCount);
+
+                    var lis = "";
+                    /*
+                    *    <li><a href="">首页</a></li>
+                         <li class="threeword"><a href="#">上一页</a></li>
+                    * */
+                    var fristPage = '<li onclick="javascript:load('+cid+')"><a href="javascript:void(0)">首页</a></li>';
+                    //计算上一页的页码
+                    var beforeNum = pb.currentPage - 1;
+                    if (beforeNum<=0){
+                        beforeNum = 1;
+                    }
+                    var beforePage = '<li onclick="javascript:load('+cid+','+beforeNum+')" class="threeword"><a href="javascript:void(0)">上一页</a></li>';
+                    lis += fristPage;
+                    lis += beforePage;
+                    //1.2展示分页代码
+                    /*
+                        1.一共展示10个页码，能够到达哦前5后4的效果
+                        2.如果前边不够5个，后面补齐10个
+                        3.如果后边不足4个，钱买呢补齐10个
+                     */
+                    //定义开始位置begin,结束位置end
+                    //开始位置
+                    var begin;
+                    //结束位置
+                    var end;
+                    //1.要显示10个页码
+                    if (pb.totalPage<10){
+                        //总页码不够10页
+                        begin = 1;
+                        end = pb.totalPage;
+                    }else {
+                        //总页码超过10页
+                        begin = pb.currentPage - 5;
+                        end = pb.currentPage + 4;
+                        //2.如果前边不够5个，后边补齐10个
+                        if (begin < 1){
+                            begin=1;
+                            end = begin + 9;
+                        }
+                        //如果后面不足4个，前边补齐10个
+                        if (end>pb.totalPage){
+                            end = pb.totalPage;
+                            begin = end - 9;
+                        }
+                    }
+                    for (let i = begin; i <= end; i++) {
+                        var li;
+                        //判断当前页码是否等于i
+                        if (pb.currentPage == i){
+                            li = '<li class="curPage" onclick="javascript:load('+cid+','+i+')"><a href="javascript:void(0)">'+i+'</a></li>';
+                        }else {
+                            //创建页码的li
+                            li = '<li onclick="javascript:load('+cid+','+i+')"><a href="javascript:void(0)">'+i+'</a></li>';
+                        }
+                        //拼接字符串
+                        lis += li;
+                    }
+                    /*
+                    <li class="threeword"><a href="javascript:;">下一页</a></li>
+                    <li class="threeword"><a href="javascript:;">末页</a></li>
+                     */
+                    var lastPage = '<li class="threeword"><a href="javascript:;">下一页</a></li>';
+                    var nextPage = '<li class="threeword"><a href="javascript:;">末页</a></li>';
+
+                    lis += nextPage;
+                    lis += lastPage;
+
+                    //将lis内容设置到url
+                    $("#pageNum").html(lis);
+
+                    //列表数据展示
+                    var route_lis = "";
+                    for (let i = 0; i < pb.list.length; i++) {
+                        //获取{rid:1,rname:"xxx"}
+                        var route = pb.list[i];
+                        var li = '              <li>\n' +
+                            '                            <div class="img"><img src="'+route.rimage+'" style="width:299px"></div>\n' +
+                            '                            <div class="text1">\n' +
+                            '                                <p>'+route.rname+'</p>\n' +
+                            '                                <br/>\n' +
+                            '                                <p>+route.routeIntroduce+</p>\n' +
+                            '                            </div>\n' +
+                            '                            <div class="price">\n' +
+                            '                                <p class="price_num">\n' +
+                            '                                    <span>&yen;</span>\n' +
+                            '                                    <span>'+route.price+'</span>\n' +
+                            '                                    <span>起</span>\n' +
+                            '                                </p>\n' +
+                            '                                <p><a href="route_detail.html">查看详情</a></p>\n' +
+                            '                            </div>\n' +
+                            '                        </li>';
+                        route_lis+=li;
+                    }
+                    $("#route").html(route_lis);
+                    //定位到页面顶部
+                    window.scrollTo(0,0);
+                })
+            }
+    </script>
 </head>
 <body>
 <!--引入头部-->
@@ -25,7 +142,7 @@
                         <span>商品信息</span>
                         <span class="jg">价格</span>
                     </div>
-                    <ul>
+                    <ul id="route">
                         <li>
                             <div class="img"><img src="images/04-search_03.jpg" alt=""></div>
                             <div class="text1">
@@ -157,13 +274,13 @@
                     </ul>
                     <div class="page_num_inf">
                         <i></i> 共
-                        <span>12</span>页<span>132</span>条
+                        <span id="totalPage">12</span>页<span id="totalCount">132</span>条
                     </div>
                     <div class="pageNum">
-                        <ul>
+                        <ul id="pageNum">
                             <li><a href="">首页</a></li>
                             <li class="threeword"><a href="#">上一页</a></li>
-                            <li><a href="#">1</a></li>
+                            <li class="curPage"><a href="#">1</a></li>
                             <li><a href="#">2</a></li>
                             <li><a href="#">3</a></li>
                             <li><a href="#">4</a></li>

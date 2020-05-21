@@ -71,7 +71,7 @@
 				$("#registerForm").submit(function () {
 					//如果这个方法没有返回值，或者是返回为true，则提交表单，如果返回为false，则不提交
 					if (checkUsername()&&checkPassword()&&checkEmail()){
-						$.post("registUserServlet",$(this).serialize(),function (date) {
+						$.post("user/regist",$(this).serialize(),function (date) {
 							//处理服务器响应的数据 data {flag:true;errorMsg:注册失败}
 							if (date.flag){
 								//注册成功

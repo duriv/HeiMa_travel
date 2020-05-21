@@ -23,7 +23,7 @@
 			//给登陆事件绑定单击事件
 			$("#btn_sub").click(function () {
 				//发送ajax请求，提交表单数据
-				$.post("loginServlet",$("#loginForm").serialize(),function (data) {
+				$.post("user/login",$("#loginForm").serialize(),function (data) {
 					//data:{flag:false,errormsg}
 					if (data.flag){
 						//登陆成功
