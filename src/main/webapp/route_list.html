@@ -12,12 +12,12 @@
     <script src="js/getParameter.js"></script>
     <script>
             $(function () {
-              /*  var serch = location.search;
+              /*  var search = location.search;
                 //切割字符串，拿到第二个值
-                var cid = serch.split("=")[1];
+                var cid = search.split("=")[1];
                 // alert(cid);*/
-                let cid = getParameter("cid");
-                let rname = getParameter("rname");
+                var cid = getParameter("cid");
+                var rname = getParameter("rname");
                 //解码
                 if(rname){
                     rname = window.decodeURIComponent(rname);
@@ -39,15 +39,15 @@
                     var lis = "";
                     /*
                     *    <li><a href="">首页</a></li>
-                         <li class="threeword"><a href="#">上一页</a></li>
-                    * */
-                    var fristPage = '<li onclick="javascript:load('+cid+',1,\''+rname+'\')"><a href="javascript:void(0)">首页</a></li>';
+                    *      <li class="threeword"><a href="#">上一页</a></li>
+                    */
+                    var fristPage = '<li onclick="javascipt:load('+cid+',1,\''+rname+'\')"><a href="javascript:void(0)">首页</a></li>';
                     //计算上一页的页码
                     var beforeNum = pb.currentPage - 1;
                     if (beforeNum<=0){
                         beforeNum = 1;
                     }
-                    var beforePage = '<li onclick="javascript:load('+cid+','+beforeNum+',\''+rname+'\')" class="threeword"><a href="javascript:void(0)">上一页</a></li>';
+                    var beforePage = '<li onclick="javascipt:load('+cid+','+beforeNum+',\''+rname+'\')" class="threeword"><a href="javascript:void(0)">上一页</a></li>';
                     lis += fristPage;
                     lis += beforePage;
                     //1.2展示分页代码
@@ -62,33 +62,33 @@
                     //结束位置
                     var end;
                     //1.要显示10个页码
-                    if (pb.totalPage<10){
+                    if (pb.totalPage < 10){
                         //总页码不够10页
                         begin = 1;
                         end = pb.totalPage;
                     }else {
                         //总页码超过10页
-                        begin = pb.currentPage - 5;
-                        end = pb.currentPage + 4;
+                        begin = pb.currentPage - 5 ;
+                        end = pb.currentPage + 4 ;
                         //2.如果前边不够5个，后边补齐10个
                         if (begin < 1){
-                            begin=1;
+                            begin = 1;
                             end = begin + 9;
                         }
                         //如果后面不足4个，前边补齐10个
-                        if (end>pb.totalPage){
+                        if (end > pb.totalPage){
                             end = pb.totalPage;
-                            begin = end - 9;
+                            begin = end - 9 ;
                         }
                     }
-                    for (let i = begin; i <= end; i++) {
+                    for (var i = begin; i <= end ; i++) {
                         var li;
                         //判断当前页码是否等于i
                         if (pb.currentPage == i){
-                            li = '<li class="curPage" onclick="javascript:load('+cid+','+i+',\''+rname+'\')"><a href="javascript:void(0)">'+i+'</a></li>';
+                            li = '<li class="curPage" onclick="javascipt:load('+cid+','+i+',\''+rname+'\')"><a href="javascript:void(0)">'+i+'</a></li>';
                         }else {
                             //创建页码的li
-                            li = '<li onclick="javascript:load('+cid+','+i+',\''+rname+'\')"><a href="javascript:void(0)">'+i+'</a></li>';
+                            li = '<li onclick="javascipt:load('+cid+','+i+',\''+rname+'\')"><a href="javascript:void(0)">'+i+'</a></li>';
                         }
                         //拼接字符串
                         lis += li;
@@ -97,8 +97,8 @@
                     <li class="threeword"><a href="javascript:;">下一页</a></li>
                     <li class="threeword"><a href="javascript:;">末页</a></li>
                      */
-                    var lastPage = '<li class="threeword"><a href="javascript:;">下一页</a></li>';
-                    var nextPage = '<li class="threeword"><a href="javascript:;">末页</a></li>';
+                    var lastPage = '<li class="threeword"><a href="javascript:;">末页</a></li>';
+                    var nextPage = '<li class="threeword"><a href="javascript:;">下一页</a></li>';
 
                     lis += nextPage;
                     lis += lastPage;
@@ -108,15 +108,15 @@
 
                     //列表数据展示
                     var route_lis = "";
-                    for (let i = 0; i < pb.list.length; i++) {
+                    for (var i = 0; i < pb.list.length; i++) {
                         //获取{rid:1,rname:"xxx"}
                         var route = pb.list[i];
-                        var li = '              <li>\n' +
-                            '                            <div class="img"><img src="'+route.rimage+'" style="width:299px"></div>\n' +
+                        var li = '<li>\n' +
+                            '                            <div class="img"><img src="'+route.rimage+'" style="width:299px;"></div>\n' +
                             '                            <div class="text1">\n' +
                             '                                <p>'+route.rname+'</p>\n' +
                             '                                <br/>\n' +
-                            '                                <p>+route.routeIntroduce+</p>\n' +
+                            '                                <p>'+route.routeIntroduce+'</p>\n' +
                             '                            </div>\n' +
                             '                            <div class="price">\n' +
                             '                                <p class="price_num">\n' +
@@ -127,12 +127,12 @@
                             '                                <p><a href="route_detail.html?rid='+route.rid+'">查看详情</a></p>\n' +
                             '                            </div>\n' +
                             '                        </li>';
-                        route_lis+=li;
+                        route_lis += li;
                     }
                     $("#route").html(route_lis);
                     //定位到页面顶部
                     window.scrollTo(0,0);
-                })
+                });
             }
     </script>
 </head>

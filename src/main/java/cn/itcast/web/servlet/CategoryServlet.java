@@ -29,8 +29,4 @@ public class CategoryServlet extends BaseServlet {
         //序列化为json返回
         writeValue(all,response);
     }
-
-    public void find(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("find");
-    }
 }

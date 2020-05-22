@@ -4,12 +4,15 @@ import cn.itcast.bean.PageBean;
 import cn.itcast.bean.Route;
 import cn.itcast.bean.RouteImg;
 import cn.itcast.bean.Seller;
+import cn.itcast.dao.FavoriteDao;
 import cn.itcast.dao.RouteDao;
 import cn.itcast.dao.RouteImgDao;
 import cn.itcast.dao.SellerDao;
+import cn.itcast.dao.impl.FavoriteDaoImpl;
 import cn.itcast.dao.impl.RouteDaoImpl;
 import cn.itcast.dao.impl.RouteImgDaoImpl;
 import cn.itcast.dao.impl.SellerDaoImpl;
+
 import cn.itcast.service.FavoriteService;
 import cn.itcast.service.RouteService;
 
@@ -19,7 +22,7 @@ public class RouteServiceImpl implements RouteService {
     private RouteDao routeDao = new RouteDaoImpl();
     private RouteImgDao routeImgDao = new RouteImgDaoImpl();
     private SellerDao sellerDao = new SellerDaoImpl();
-    private FavoriteService favoriteService = new FavoriteServiceImpl();
+    private FavoriteDao favoriteDao = new FavoriteDaoImpl();
     @Override
     public PageBean<Route> pageQuery(int cid, int currentPage, int pageSize,String rname) {
         //封装PageBean
@@ -49,11 +52,12 @@ public class RouteServiceImpl implements RouteService {
         Route route = routeDao.findOne(Integer.parseInt(rid));
         //2.根据route的id查询图片集合信息
         List<RouteImg> routeImgList = routeImgDao.findByRid(route.getRid());
+        route.setRouteImgList(routeImgList);
         //3.根据route的sid（商家id）查询商家对象
         Seller seller = sellerDao.findById(route.getSid());
         route.setSeller(seller);
         //4.查询收藏次数
-        int count = favoriteService.findCountByRid(route.getRid());
+        int count = favoriteDao.findCountByRid(route.getRid());
         route.setCount(count);
         return route;
     }

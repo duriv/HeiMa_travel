@@ -71,14 +71,14 @@
 				$("#registerForm").submit(function () {
 					//如果这个方法没有返回值，或者是返回为true，则提交表单，如果返回为false，则不提交
 					if (checkUsername()&&checkPassword()&&checkEmail()){
-						$.post("user/regist",$(this).serialize(),function (date) {
+						$.post("user/regist",$(this).serialize(),function (data) {
 							//处理服务器响应的数据 data {flag:true;errorMsg:注册失败}
-							if (date.flag){
+							if (data.flag){
 								//注册成功
 								location.href="register_ok.html";
 							}else {
 								//注册失败,给errorMsg添加提示信息
-								$("#errorMsg").html(date.errorMsg);
+								$("#errorMsg").html(data.errorMsg);
 							}
 						});
 					}

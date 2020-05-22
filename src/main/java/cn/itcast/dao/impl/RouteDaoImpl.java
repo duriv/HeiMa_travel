@@ -16,7 +16,7 @@ public class RouteDaoImpl implements RouteDao {
     public int findTotalCount(int cid,String rname) {
 //        String sql = "select count(*) from tab_route where cid = ?";
         //1.定义sql模板
-        String sql = "select count(*) from tab_route where 1 = 1 ";
+        String sql = "select count(*) from tab_route where 1=1 ";
         StringBuilder sb = new StringBuilder(sql);
         //条件们
         List params = new ArrayList();
@@ -28,11 +28,10 @@ public class RouteDaoImpl implements RouteDao {
             params.add(cid);
         }
         if (rname != null && rname.length() > 0){
-            sb.append(" add rname like ?");
+            sb.append(" and rname like ?");
             params.add("%"+rname+"%");
         }
         sql = sb.toString();
-//        return template.queryForObject(sql,Integer.class,cid);
         return template.queryForObject(sql,Integer.class,params.toArray());
     }
 
@@ -52,7 +51,7 @@ public class RouteDaoImpl implements RouteDao {
             params.add(cid);
         }
         if (rname != null && rname.length() > 0){
-            sb.append(" add rname like ?");
+            sb.append(" and rname like ? ");
             params.add("%"+rname+"%");
         }
         //分页条件

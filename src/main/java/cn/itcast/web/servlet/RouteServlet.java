@@ -23,11 +23,11 @@ public class RouteServlet extends BaseServlet {
     public void pageQuery(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //1.接受参数
         String currentPageStr = request.getParameter("currentPage");
-        String pageSizeStr = request.getParameter("PageSize");
+        String pageSizeStr = request.getParameter("pageSize");
         String cidStr = request.getParameter("cid");
         //接受rname线路名称
         String rname = request.getParameter("rname");
-        rname = new String(rname.getBytes("iso-8859-1"), "utf-8");
+        rname = new String(rname.getBytes("iso-8859-1"),"utf-8");
         //2.处理参数
         //类别id
         int cid = 0;
@@ -49,9 +49,9 @@ public class RouteServlet extends BaseServlet {
             pageSize = 5;
         }
         //3.调用servic查询pagebean对象
-        PageBean<Route> pb = routeService.pageQuery(cid, currentPage, pageSize, rname);
+        PageBean<Route> pb = routeService.pageQuery(cid, currentPage, pageSize,rname);
         //4.将pageBean对象序列化为json，返回
-        writeValue(pb, response);
+        writeValue(pb,response);
     }
 
     /**
@@ -68,7 +68,7 @@ public class RouteServlet extends BaseServlet {
         //2调用service查询route对象
         Route route = routeService.findOne(rid);
         //3转为json写回客户端
-        writeValue(route, response);
+        writeValue(route,response);
     }
 
     /**
@@ -99,11 +99,18 @@ public class RouteServlet extends BaseServlet {
         writeValue(flag, response);
     }
 
+    /**
+     * 增加收藏
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     public void addFavorite(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //1.获取线路rid
         String rid = request.getParameter("rid");
         //2.获取当前登陆用户
-        User user = (User) request.getSession().getAttribute("User");
+        User user = (User) request.getSession().getAttribute("user");
         int uid;
         if (user == null){
             return;

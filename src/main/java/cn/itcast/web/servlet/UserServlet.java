@@ -70,7 +70,7 @@ public class UserServlet extends BaseServlet{
         }else {
             //注册失败
             info.setFlag(false);
-            info.setErrorMsg("注册失败");
+            info.setErrorMsg("注册失败!");
         }
         //将info对象序列化为json
         ObjectMapper mapper = new ObjectMapper();

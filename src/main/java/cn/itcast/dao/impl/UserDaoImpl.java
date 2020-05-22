@@ -17,8 +17,8 @@ public class UserDaoImpl implements UserDao {
             String sql = "select * from tab_user where username = ?";
             //2.执行sql
             user = template.queryForObject(sql, new BeanPropertyRowMapper<User>(User.class), username);
-        } catch (DataAccessException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+
         }
         return user;
     }
@@ -36,7 +36,8 @@ public class UserDaoImpl implements UserDao {
                 user.getTelephone(),
                 user.getEmail(),
                 user.getStatus(),
-                user.getCode());
+                user.getCode()
+        );
     }
 
     /**
@@ -78,9 +79,9 @@ public class UserDaoImpl implements UserDao {
         User user = null;
         try {
             String sql ="select * from tab_user where username = ? and password = ?";
-            user = template.queryForObject(sql, new BeanPropertyRowMapper<User>(User.class), username, password);
-        } catch (DataAccessException e) {
-            e.printStackTrace();
+            user = template.queryForObject(sql, new BeanPropertyRowMapper<User>(User.class), username,password);
+        } catch (Exception e) {
+
         }
         return user;
     }
