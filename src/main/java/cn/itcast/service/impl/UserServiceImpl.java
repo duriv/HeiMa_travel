@@ -36,6 +36,7 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+
     /**
      * 激活用户
      * @param code
@@ -56,6 +57,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 登陆方法
+     * 调用dao层，传入对象的用户名和密码
      * @param user
      * @return
      */

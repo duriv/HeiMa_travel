@@ -14,6 +14,13 @@ import java.util.Set;
 
 public class CategoryServiceImpl implements CategoryService {
     private CategoryDao dao = new CategoryDaoImpl();
+
+    /**
+     * 查询所有数据
+     * 第一次走数据库
+     * 之后走redis
+     * @return
+     */
     @Override
     public List<Category> findAll() {
         //1.从redis中查询

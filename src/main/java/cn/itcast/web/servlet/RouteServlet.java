@@ -20,13 +20,24 @@ public class RouteServlet extends BaseServlet {
     private RouteService routeService = new RouteServiceImpl();
     private FavoriteService favoriteService = new FavoriteServiceImpl();
 
+    /**
+     * 查询对象
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     public void pageQuery(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //1.接受参数
+        //接收当前页
         String currentPageStr = request.getParameter("currentPage");
+        //接收页面数据大小
         String pageSizeStr = request.getParameter("pageSize");
+        //接收类型编号
         String cidStr = request.getParameter("cid");
-        //接受rname线路名称
+        //接收rname线路名称
         String rname = request.getParameter("rname");
+        //设置编码。
         rname = new String(rname.getBytes("iso-8859-1"),"utf-8");
         //2.处理参数
         //类别id

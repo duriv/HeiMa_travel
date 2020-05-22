@@ -37,10 +37,6 @@
                     $("#totalCount").html(pb.totalCount);
 
                     var lis = "";
-                    /*
-                    *    <li><a href="">首页</a></li>
-                    *      <li class="threeword"><a href="#">上一页</a></li>
-                    */
                     var fristPage = '<li onclick="javascipt:load('+cid+',1,\''+rname+'\')"><a href="javascript:void(0)">首页</a></li>';
                     //计算上一页的页码
                     var beforeNum = pb.currentPage - 1;
@@ -93,13 +89,15 @@
                         //拼接字符串
                         lis += li;
                     }
-                    /*
-                    <li class="threeword"><a href="javascript:;">下一页</a></li>
-                    <li class="threeword"><a href="javascript:;">末页</a></li>
-                     */
-                    var lastPage = '<li class="threeword"><a href="javascript:;">末页</a></li>';
-                    var nextPage = '<li class="threeword"><a href="javascript:;">下一页</a></li>';
 
+                    //计算下一页的页码
+                  /*  var totalPage = totalPagetotalCount % pageSize == 0 ? totalCount / pageSize :(totalCount/pageSize)+1;
+                    var infore = pb.currentPage + 1;
+                    if (infore>=totalPage){
+                        infore = totalPage;
+                    }*/
+                    var nextPage = '<li class="threeword"><a href="javascript:void(0);">下一页</a></li>';
+                    var lastPage = '<li class="threeword"><a href="javascript:void(0)">末页</a></li>';
                     lis += nextPage;
                     lis += lastPage;
 

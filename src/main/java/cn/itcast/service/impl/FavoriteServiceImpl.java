@@ -9,6 +9,13 @@ import cn.itcast.service.FavoriteService;
 
 public class FavoriteServiceImpl implements FavoriteService {
     private FavoriteDao favoriteDao = new FavoriteDaoImpl();
+
+    /**
+     * 调用dao层，查询是否收藏
+     * @param rid
+     * @param uid
+     * @return
+     */
     @Override
     public boolean isFavorite(String rid, int uid) {
         Favorite favorite = favoriteDao.findByRidAndUid(Integer.parseInt(rid), uid);
@@ -16,6 +23,11 @@ public class FavoriteServiceImpl implements FavoriteService {
         return favorite != null;
     }
 
+    /**
+     * 调用dao层增加收藏
+     * @param rid
+     * @param uid
+     */
     @Override
     public void add(String rid, int uid) {
         favoriteDao.add(Integer.parseInt(rid),uid);

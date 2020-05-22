@@ -23,6 +23,15 @@ public class RouteServiceImpl implements RouteService {
     private RouteImgDao routeImgDao = new RouteImgDaoImpl();
     private SellerDao sellerDao = new SellerDaoImpl();
     private FavoriteDao favoriteDao = new FavoriteDaoImpl();
+
+    /**
+     * 分页处理
+     * @param cid 分类编号
+     * @param currentPage 当前页面
+     * @param pageSize  页面显示数量
+     * @param rname 名称
+     * @return
+     */
     @Override
     public PageBean<Route> pageQuery(int cid, int currentPage, int pageSize,String rname) {
         //封装PageBean
@@ -31,12 +40,13 @@ public class RouteServiceImpl implements RouteService {
         pb.setCurrentPage(currentPage);
         //设置每页显示条数
         pb.setPageSize(pageSize);
-        //设置总记录数
+        //设置总记录数，调用dao层查询页面的总条数
         int totalCount = routeDao.findTotalCount(cid,rname);
         pb.setTotalCount(totalCount);
         //设置当前页显示的数据集合
-        //开始的记录数
+        //当前页开始的记录数
         int start = (currentPage - 1) * pageSize;
+        //调用dao层，查询当前页需展示内容
         List<Route> list = routeDao.findByPage(cid, start, pageSize,rname);
         pb.setList(list);
         //设置总页数 = 总记录数/每页显示条数
@@ -46,9 +56,14 @@ public class RouteServiceImpl implements RouteService {
         return pb;
     }
 
+    /**
+     * 查询摸一个值去查询其他参数
+     * @param rid
+     * @return
+     */
     @Override
     public Route findOne(String rid) {
-        //1。根据id去route表中查询route对象
+        //1。调用dao层,根据id去route表中查询route对象
         Route route = routeDao.findOne(Integer.parseInt(rid));
         //2.根据route的id查询图片集合信息
         List<RouteImg> routeImgList = routeImgDao.findByRid(route.getRid());

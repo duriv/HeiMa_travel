@@ -28,6 +28,7 @@ public class UserServlet extends BaseServlet{
      * @throws ServletException
      * @throws IOException
      */
+/*
     public void regist(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //验证码校验
         String check = request.getParameter("check");
@@ -80,6 +81,38 @@ public class UserServlet extends BaseServlet{
         response.setContentType("application/json;charset=utf-8");
         response.getWriter().write(json);
     }
+*/
+    public void regist(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String check = request.getParameter("check");
+        String checkcode_server = (String) request.getSession().getAttribute("CHECKCODE_SERVER");
+        if (check == null || !check.equalsIgnoreCase(checkcode_server)){
+            ResultInfo info = new ResultInfo();
+            info.setFlag(false);
+            info.setErrorMsg("验证码错误！....请重试");
+            writeValue(info,response);
+            return;
+        }
+        Map<String, String[]> map = request.getParameterMap();
+        User user = new User();
+        try {
+            BeanUtils.populate(user,map);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
+        UserService service = new UserServiceImpl();
+        boolean flag = service.regist(user);
+        ResultInfo info = new ResultInfo();
+        if (flag){
+            info.setFlag(true);
+        }else {
+            info.setFlag(false);
+            info.setErrorMsg("注册失败。。。请重试");
+        }
+        writeValue(info,response);
+    }
 
     /**
      * 登陆
@@ -121,9 +154,11 @@ public class UserServlet extends BaseServlet{
             info.setFlag(true);
         }
         //响应数据
+
 /*        ObjectMapper mapper = new ObjectMapper();
         response.setContentType("application/json;charset=utf-8");
         mapper.writeValue(response.getOutputStream(),info);*/
+
         writeValue(info,response);
     }
 
@@ -135,13 +170,15 @@ public class UserServlet extends BaseServlet{
      * @throws IOException
      */
     public void findOne(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //从session中获取登陆用户
+        Object user = request.getSession().getAttribute("user");
+        writeValue(user,response);
+        /*        //从session中获取登陆用户
         Object user = request.getSession().getAttribute("user");
         //将user写回客户端
-        /*ObjectMapper mapper = new ObjectMapper();
+        *//*ObjectMapper mapper = new ObjectMapper();
         response.setContentType("application/json;charset=utf-8");
-        mapper.writeValue(response.getOutputStream(),user);*/
-        writeValue(user,response);
+        mapper.writeValue(response.getOutputStream(),user);*//*
+        writeValue(user,response);*/
     }
 
     /**

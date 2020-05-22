@@ -11,7 +11,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RouteDaoImpl implements RouteDao {
+    /**
+     * spring对jdbc的封装
+     */
     private JdbcTemplate template = new JdbcTemplate(JDBCUtils.getDataSource());
+
+    /**
+     * 通过cid和name查询路线表中的数量
+     * @param cid
+     * @param rname
+     * @return
+     */
     @Override
     public int findTotalCount(int cid,String rname) {
 //        String sql = "select count(*) from tab_route where cid = ?";
@@ -35,6 +45,14 @@ public class RouteDaoImpl implements RouteDao {
         return template.queryForObject(sql,Integer.class,params.toArray());
     }
 
+    /**
+     *
+     * @param cid
+     * @param start
+     * @param pageSize
+     * @param rname
+     * @return
+     */
     @Override
     public List<Route> findByPage(int cid, int start, int pageSize,String rname) {
 //        String sql = "select * from tab_route where cid = ? and rname like ? limit ?,?";
@@ -63,9 +81,15 @@ public class RouteDaoImpl implements RouteDao {
         return template.query(sql,new BeanPropertyRowMapper<Route>(Route.class),params.toArray());
     }
 
+    /**
+     * 通过rid查询tab_route表中的所有参数
+     * @param rid
+     * @return
+     */
     @Override
     public Route findOne(int rid) {
         String sql = "select * from tab_route where rid = ?";
+        //返回一个list实体类对象
         return template.queryForObject(sql,new BeanPropertyRowMapper<Route>(Route.class),rid);
     }
 }

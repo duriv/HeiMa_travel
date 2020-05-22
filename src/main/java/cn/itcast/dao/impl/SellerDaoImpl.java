@@ -11,6 +11,12 @@ import java.util.List;
 
 public class SellerDaoImpl implements SellerDao {
     private JdbcTemplate template = new JdbcTemplate(JDBCUtils.getDataSource());
+
+    /**
+     * 通过sid查询tab_seller(卖方)表
+     * @param id
+     * @return
+     */
     @Override
     public Seller findById(int id) {
         String sql = "select * from tab_seller where sid = ?";

@@ -12,10 +12,20 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+/**
+ *继承httpServlet，得到请求和响应的功能
+ *存放共有方法
+ */
 public class BaseServlet extends HttpServlet {
+    /**
+     *
+     * @param req
+     * @param resp
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        System.out.println("包哦啊哦");
         //完成方法的分发工作
         //1.获取请求路径
         String uri = req.getRequestURI();
