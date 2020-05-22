@@ -7,12 +7,15 @@ cn/itcast/utils/JedisUtil.class
 cn/itcast/bean/User.class
 cn/itcast/bean/Favorite.class
 cn/itcast/dao/impl/CategoryDaoImpl.class
+cn/itcast/dao/impl/SellerDaoImpl.class
 cn/itcast/web/servlet/ExitServlet.class
 cn/itcast/web/servlet/RouteServlet.class
 cn/itcast/web/filter/CharchaterFilter.class
 cn/itcast/service/UserService.class
 cn/itcast/web/servlet/CategoryServlet.class
+cn/itcast/dao/impl/RouteImgDaoImpl.class
 cn/itcast/service/impl/RouteServiceImpl.class
+cn/itcast/dao/SellerDao.class
 cn/itcast/utils/MailUtils$1.class
 cn/itcast/web/servlet/BaseServlet.class
 cn/itcast/utils/UuidUtil.class
@@ -25,6 +28,7 @@ cn/itcast/web/servlet/RegistUserServlet.class
 cn/itcast/service/CategoryService.class
 cn/itcast/utils/Md5Util.class
 cn/itcast/bean/Category.class
+cn/itcast/dao/RouteImgDao.class
 cn/itcast/dao/RouteDao.class
 cn/itcast/dao/UserDao.class
 cn/itcast/dao/CategoryDao.class
