@@ -92,4 +92,10 @@ public class RouteDaoImpl implements RouteDao {
         //返回一个list实体类对象
         return template.queryForObject(sql,new BeanPropertyRowMapper<Route>(Route.class),rid);
     }
+
+    @Override
+    public List<Route> findAl() {
+        String sql = "select * from tab_route order by count desc ";
+        return template.query(sql,new BeanPropertyRowMapper<Route>(Route.class));
+    }
 }

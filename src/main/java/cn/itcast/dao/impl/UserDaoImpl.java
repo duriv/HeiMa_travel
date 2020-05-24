@@ -3,6 +3,7 @@ package cn.itcast.dao.impl;
 import cn.itcast.bean.User;
 import cn.itcast.dao.UserDao;
 import cn.itcast.utils.JDBCUtils;
+import cn.itcast.utils.Md5Util;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -29,8 +30,13 @@ public class UserDaoImpl implements UserDao {
         return user;
     }*/
     public User findByUsername(String username){
-        String sql = "select * from tab_user where username = ?";
-        User user = template.queryForObject(sql, new BeanPropertyRowMapper<User>(User.class));
+        User user = null;
+        try {
+            String sql = "select * from tab_user where username = ?";
+            user = template.queryForObject(sql, new BeanPropertyRowMapper<User>(User.class),username);
+        } catch (DataAccessException e) {
+
+        }
         return user;
 
     }
@@ -56,6 +62,13 @@ public class UserDaoImpl implements UserDao {
     }
 */
     public void save(User user){
+        String password = user.getPassword();
+        try {
+            password = Md5Util.encodeByMd5(password);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        user.setPassword(password);
         String sql = "insert into tab_user(username,password,name,birthday,sex,telephone,email,status,code) values(?,?,?,?,?,?,?,?,?)";
         template.update(sql,user.getUsername(),
                 user.getPassword(),
@@ -73,7 +86,7 @@ public class UserDaoImpl implements UserDao {
      * @return
      */
     @Override
-/*    public User findByCode(String code) {
+    public User findByCode(String code) {
         User user = null;
         try {
             String sql = "select * from tab_user where code = ?";
@@ -83,24 +96,15 @@ public class UserDaoImpl implements UserDao {
         }
 
         return user;
-    }*/
-    public User findByCode(String code){
-        String sql = "select * from tab_user where code = ?";
-        User user = template.queryForObject(sql, new BeanPropertyRowMapper<User>(User.class));
-        return user;
-
     }
+
     /**
      * 修改指定用户激活状态
      * @param user
      */
     @Override
-/*    public void updateStatus(User user) {
+    public void updateStatus(User user) {
         String sql = " update tab_user set status = 'Y' where uid=?";
-        template.update(sql,user.getUid());
-    }*/
-    public void updateStatus(User user){
-        String sql = "update tab_user set status = 'Y' where uid = ?";
         template.update(sql,user.getUid());
     }
 
@@ -121,5 +125,21 @@ public class UserDaoImpl implements UserDao {
         }
         return user;
     }
+
+    @Override
+    public void upss(User user) {
+        String password=null;
+        try {
+            password = Md5Util.encodeByMd5(user.getPassword());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String username = user.getUsername();
+        String sql = " update tab_user set password = ? where username =?";
+        template.update(sql,password,username);
+    }
+    /**
+     * 人气
+     */
 
 }

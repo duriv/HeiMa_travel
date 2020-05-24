@@ -20,4 +20,6 @@ public interface RouteDao {
      * @return
      */
     public Route findOne(int rid);
+
+    public List<Route> findAl();
 }

@@ -76,4 +76,9 @@ public class RouteServiceImpl implements RouteService {
         route.setCount(count);
         return route;
     }
+
+    @Override
+    public List<Route> findAl() {
+        return routeDao.findAl();
+    }
 }

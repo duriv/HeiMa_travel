@@ -24,13 +24,14 @@ import java.util.Map;
 public class RegistUserServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //验证码校验
         String check = request.getParameter("check");
+        //从session中获取验证码
         HttpSession session = request.getSession();
-        String checkcode_server = (String) session.getAttribute("CHECKCODE_SERVER");
-        //保证用户名只使用一次
-        session.removeAttribute("CHECKCODE_SERVER");
-        if (checkcode_server==null || !checkcode_server.equalsIgnoreCase(check)){
+        String checkcodeServer = (String) session.getAttribute("CHECKCODE_SERVER");
+        //为了保证验证码只使用一次
+        session.removeAttribute(checkcodeServer);
+        //比较
+        if (checkcodeServer==null || !checkcodeServer.equalsIgnoreCase(check)){
             //验证码错误
             ResultInfo info = new ResultInfo();
             info.setFlag(false);
@@ -38,7 +39,7 @@ public class RegistUserServlet extends HttpServlet {
             //将info对象序列化为json
             ObjectMapper mapper = new ObjectMapper();
             String json = mapper.writeValueAsString(info);
-            response.setContentType("application/json;charset=utf-8");
+            response.setContentType("application/json;utf-8");
             response.getWriter().write(json);
             return;
         }

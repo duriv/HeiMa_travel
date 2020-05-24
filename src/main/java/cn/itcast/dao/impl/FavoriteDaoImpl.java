@@ -59,4 +59,15 @@ public class FavoriteDaoImpl implements FavoriteDao {
 
         template.update(sql,rid,new Date(),uid);
     }
+
+    /**
+     * 遍历收藏
+     * @return
+     */
+    @Override
+    public Favorite findFavorite() {
+        String sql = "select * from tab_favorite inner join tab_route tr on tab_favorite.rid = tr.rid";
+        return null;
+    }
+
 }

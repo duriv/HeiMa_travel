@@ -68,7 +68,7 @@
 
 			//当表单提交时，调用所有的校验方法
 			$(function () {
-				$("/user/login").submit(function () {
+				$("#registerForm").submit(function () {
 					//如果这个方法没有返回值，或者是返回为true，则提交表单，如果返回为false，则不提交
 					if (checkUsername()&&checkPassword()&&checkEmail()){
 						$.post("user/regist",$(this).serialize(),function (data) {

@@ -9,10 +9,7 @@ import org.apache.commons.beanutils.BeanUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -84,16 +81,29 @@ public class UserServlet extends BaseServlet{
 */
     public void regist(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String check = request.getParameter("check");
-        String checkcode_server = (String) request.getSession().getAttribute("CHECKCODE_SERVER");
-        if (check == null || !check.equalsIgnoreCase(checkcode_server)){
+        //从session中获取验证码
+        HttpSession session = request.getSession();
+        String checkcodeServer = (String) session.getAttribute("CHECKCODE_SERVER");
+        //为了保证验证码只使用一次
+        session.removeAttribute(checkcodeServer);
+        //比较
+        if (checkcodeServer==null || !checkcodeServer.equalsIgnoreCase(check)){
+            //验证码错误
             ResultInfo info = new ResultInfo();
             info.setFlag(false);
-            info.setErrorMsg("验证码错误！....请重试");
-            writeValue(info,response);
+            info.setErrorMsg("验证码错误");
+            //将info对象序列化为json
+            ObjectMapper mapper = new ObjectMapper();
+            String json = mapper.writeValueAsString(info);
+            response.setContentType("application/json;utf-8");
+            response.getWriter().write(json);
             return;
         }
+        //1.获取数据
         Map<String, String[]> map = request.getParameterMap();
+        //2.封装对象
         User user = new User();
+        //复制
         try {
             BeanUtils.populate(user,map);
         } catch (IllegalAccessException e) {
@@ -101,17 +111,28 @@ public class UserServlet extends BaseServlet{
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
-
+        //调用servic层当方法完成注册
         UserService service = new UserServiceImpl();
         boolean flag = service.regist(user);
         ResultInfo info = new ResultInfo();
+        //
         if (flag){
+            //注册成功
             info.setFlag(true);
         }else {
+            //注册失败
             info.setFlag(false);
-            info.setErrorMsg("注册失败。。。请重试");
+            info.setErrorMsg("注册失败");
         }
+ /*       //将info对象序列化为json
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(info);
+        //将json写会客户端
+        //设置content-type
+        response.setContentType("application/json;charset=utf-8");
+        response.getWriter().write(json);*/
         writeValue(info,response);
+
     }
 
     /**
@@ -150,15 +171,22 @@ public class UserServlet extends BaseServlet{
         }
         //判断登陆成功
         if(u != null && "Y".equals(u.getStatus())){
+            String remember = request.getParameter("remember");
+
+            if (remember != null){
+                Cookie cookieUsername = new Cookie("username", user.getUsername());
+                Cookie cookiePassword = new Cookie("password", user.getPassword());
+                cookieUsername.setMaxAge(60*60);
+                cookiePassword.setMaxAge(60*60);
+                cookiePassword.setPath(request.getContextPath()+"/login.html");
+                cookieUsername.setPath(request.getContextPath()+"/login.html");
+                response.addCookie(cookieUsername);
+                response.addCookie(cookiePassword);
+            }
             request.getSession().setAttribute("user",u);
             info.setFlag(true);
         }
         //响应数据
-
-/*        ObjectMapper mapper = new ObjectMapper();
-        response.setContentType("application/json;charset=utf-8");
-        mapper.writeValue(response.getOutputStream(),info);*/
-
         writeValue(info,response);
     }
 
@@ -172,13 +200,7 @@ public class UserServlet extends BaseServlet{
     public void findOne(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Object user = request.getSession().getAttribute("user");
         writeValue(user,response);
-        /*        //从session中获取登陆用户
-        Object user = request.getSession().getAttribute("user");
-        //将user写回客户端
-        *//*ObjectMapper mapper = new ObjectMapper();
-        response.setContentType("application/json;charset=utf-8");
-        mapper.writeValue(response.getOutputStream(),user);*//*
-        writeValue(user,response);*/
+
     }
 
     /**
@@ -191,7 +213,11 @@ public class UserServlet extends BaseServlet{
     public void exit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //销毁session
         request.getSession().invalidate();
-
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
+        }
         //跳转登陆页面
         response.sendRedirect(request.getContextPath()+"/login.html");
     }
@@ -222,6 +248,58 @@ public class UserServlet extends BaseServlet{
             response.setContentType("text/html;charset=utf-8");
             response.getWriter().write(msg);
         }
+    }
+
+    /**
+     * 修改密码
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
+    public void upass(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //1.获取用户名和密码
+        //查询是否正确
+        //正确调用修改密码对方法修改密码
+        String check = request.getParameter("check");
+        //从session中获取验证码
+        HttpSession session = request.getSession();
+        String checkcodeServer = (String) session.getAttribute("CHECKCODE_SERVER");
+        //为了保证验证码只使用一次
+        session.removeAttribute(checkcodeServer);
+        //比较
+        if (checkcodeServer==null || !checkcodeServer.equalsIgnoreCase(check)){
+            //验证码错误
+            ResultInfo info = new ResultInfo();
+            info.setFlag(false);
+            info.setErrorMsg("验证码错误");
+            //将info对象序列化为json
+            ObjectMapper mapper = new ObjectMapper();
+            String json = mapper.writeValueAsString(info);
+            response.setContentType("application/json;utf-8");
+            response.getWriter().write(json);
+            return;
+        }
+        String username = request.getParameter("username");
+        String password = request.getParameter("password1");
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(password);
+        UserService service = new UserServiceImpl();
+        boolean flag = service.findA(user);
+
+        String password3 = request.getParameter("password3");
+        User user1 = new User();
+        user1.setUsername(username);
+        user1.setPassword(password3);
+        ResultInfo info = new ResultInfo();
+        if (flag==true){
+            //修改密码
+            service.upss(user1);
+            info.setFlag(true);
+        }
+        writeValue(info,response);
+
     }
 
 }

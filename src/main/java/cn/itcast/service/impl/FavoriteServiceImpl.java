@@ -33,5 +33,10 @@ public class FavoriteServiceImpl implements FavoriteService {
         favoriteDao.add(Integer.parseInt(rid),uid);
     }
 
+    @Override
+    public Favorite findFavirite() {
+        return null;
+    }
+
 
 }

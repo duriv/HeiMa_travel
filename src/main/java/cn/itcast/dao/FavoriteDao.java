@@ -23,4 +23,6 @@ public interface FavoriteDao {
      * @param uid
      */
     public void add(int parseInt, int uid);
+
+    public Favorite findFavorite();
 }

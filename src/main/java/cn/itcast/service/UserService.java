@@ -14,4 +14,8 @@ public interface UserService {
     boolean active(String code);
 
     User login(User user);
+
+    boolean findA(User user);
+
+    boolean upss(User user);
 }

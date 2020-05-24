@@ -1,5 +1,6 @@
 package cn.itcast.web.servlet;
 
+import cn.itcast.bean.Favorite;
 import cn.itcast.bean.PageBean;
 import cn.itcast.bean.Route;
 import cn.itcast.bean.User;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet(name = "RouteServlet",urlPatterns = "/route/*")
 public class RouteServlet extends BaseServlet {
@@ -130,5 +132,17 @@ public class RouteServlet extends BaseServlet {
         }
         //3.调用service添加
         favoriteService.add(rid,uid);
+    }
+
+    /**
+     * 查询收藏
+     * @param request
+     * @param response
+     */
+    public void findAl(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        //查询收藏表的数据
+        List<Route> route = routeService.findAl();
+        System.out.println(route);
+        writeValue(route,response);
     }
 }

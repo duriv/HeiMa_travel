@@ -1,5 +1,7 @@
 package cn.itcast.service;
 
+import cn.itcast.bean.Favorite;
+
 public interface FavoriteService {
     /**
      * 判断是否收藏
@@ -15,4 +17,6 @@ public interface FavoriteService {
      * @param uid
      */
     public void add(String rid, int uid);
+
+    public Favorite findFavirite();
 }

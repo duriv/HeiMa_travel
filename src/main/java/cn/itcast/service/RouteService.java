@@ -3,6 +3,8 @@ package cn.itcast.service;
 import cn.itcast.bean.PageBean;
 import cn.itcast.bean.Route;
 
+import java.util.List;
+
 public interface RouteService {
     /**
      * 根据类别进行分页查询
@@ -20,4 +22,6 @@ public interface RouteService {
      * @return
      */
     public Route findOne(String rid);
+
+    public List<Route> findAl();
 }

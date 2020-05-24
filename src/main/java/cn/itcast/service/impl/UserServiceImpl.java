@@ -5,7 +5,11 @@ import cn.itcast.dao.UserDao;
 import cn.itcast.dao.impl.UserDaoImpl;
 import cn.itcast.service.UserService;
 import cn.itcast.utils.MailUtils;
+import cn.itcast.utils.Md5Util;
 import cn.itcast.utils.UuidUtil;
+
+import java.math.BigInteger;
+import java.security.MessageDigest;
 
 public class UserServiceImpl implements UserService {
     private UserDao dao = new UserDaoImpl();
@@ -63,6 +67,35 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User login(User user) {
-        return dao.findByUsernameAndPassword(user.getUsername(),user.getPassword());
+        String password = null;
+        try {
+            password = Md5Util.encodeByMd5(user.getPassword());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return dao.findByUsernameAndPassword(user.getUsername(),password);
     }
+
+    @Override
+    public boolean findA(User user) {
+        String password=null;
+        try {
+            password = Md5Util.encodeByMd5(user.getPassword());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        User byUsernameAndPassword = dao.findByUsernameAndPassword(user.getUsername(),password);
+        if (byUsernameAndPassword!=null){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean upss(User user) {
+        dao.upss(user);
+        return true;
+    }
+
+
 }
